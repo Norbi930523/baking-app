@@ -19,6 +19,8 @@ public class RecipeStep implements Parcelable {
 
     private String thumbnailURL;
 
+    public RecipeStep(){}
+
     protected RecipeStep(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

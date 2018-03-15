@@ -1,13 +1,20 @@
 package com.udacity.norbi930523.bakingapp.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.udacity.norbi930523.bakingapp.R;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by Norbert on 2018. 03. 12..
  */
 
 public class RecipeIngredient implements Parcelable {
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     private Double quantity;
 
@@ -76,5 +83,41 @@ public class RecipeIngredient implements Parcelable {
         }
         parcel.writeString(measure);
         parcel.writeString(ingredient);
+    }
+
+    public String getAsFormattedString(Context context){
+        String measureStr = measure;
+
+        int measureResId = getMeasureResourceId();
+        if(measureResId != -1){
+            measureStr = context.getResources().getQuantityString(measureResId, quantity.intValue());
+        }
+
+        return context.getString(R.string.ingredient_item_pattern, getFormattedQuantity(), measureStr, ingredient);
+    }
+
+    private String getFormattedQuantity(){
+        return DECIMAL_FORMAT.format(quantity);
+    }
+
+    private int getMeasureResourceId(){
+        switch (measure){
+            case "CUP":
+                return R.plurals.ingredient_measure_cup;
+            case "TBLSP":
+                return R.plurals.ingredient_measure_tblsp;
+            case "TSP":
+                return R.plurals.ingredient_measure_tsp;
+            case "G":
+                return R.plurals.ingredient_measure_g;
+            case "K":
+                return R.plurals.ingredient_measure_k;
+            case "OZ":
+                return R.plurals.ingredient_measure_oz;
+            case "UNIT":
+                return R.plurals.ingredient_measure_unit;
+            default:
+                return -1;
+        }
     }
 }

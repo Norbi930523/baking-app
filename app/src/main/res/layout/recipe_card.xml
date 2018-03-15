@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:padding="@dimen/spacing_medium"
             style="@style/Title"/>
 
     </LinearLayout>
