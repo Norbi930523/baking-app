@@ -1,4 +1,4 @@
-package com.udacity.norbi930523.bakingapp.fragment;
+package com.udacity.norbi930523.bakingapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +33,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     public RecipeStepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        View view = layoutInflater.inflate(R.layout.recipe_step, parent, false);
+        View view = layoutInflater.inflate(R.layout.recipe_step_list_item, parent, false);
 
         return new RecipeStepViewHolder(view);
     }

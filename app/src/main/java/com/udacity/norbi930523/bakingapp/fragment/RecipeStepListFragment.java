@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.udacity.norbi930523.bakingapp.R;
+import com.udacity.norbi930523.bakingapp.adapter.RecipeStepListAdapter;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
 
 import java.util.ArrayList;

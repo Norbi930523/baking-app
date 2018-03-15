@@ -1,4 +1,4 @@
-package com.udacity.norbi930523.bakingapp.view;
+package com.udacity.norbi930523.bakingapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;

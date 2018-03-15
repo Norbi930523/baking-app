@@ -7,5 +7,7 @@
     <string name="ingredients">Ingredients</string>
     <string name="ingredient_item_pattern">&#8226; %1$s %2$s of %3$s</string>
 
-
+    <!-- Recipe step navigation -->
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 </resources>
