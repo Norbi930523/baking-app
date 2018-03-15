@@ -1,10 +1,13 @@
 package com.udacity.norbi930523.bakingapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Norbert on 2018. 03. 12..
  */
 
-public class RecipeStep {
+public class RecipeStep implements Parcelable {
 
     private Long id;
 
@@ -15,6 +18,30 @@ public class RecipeStep {
     private String videoURL;
 
     private String thumbnailURL;
+
+    protected RecipeStep(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        shortDescription = in.readString();
+        description = in.readString();
+        videoURL = in.readString();
+        thumbnailURL = in.readString();
+    }
+
+    public static final Creator<RecipeStep> CREATOR = new Creator<RecipeStep>() {
+        @Override
+        public RecipeStep createFromParcel(Parcel in) {
+            return new RecipeStep(in);
+        }
+
+        @Override
+        public RecipeStep[] newArray(int size) {
+            return new RecipeStep[size];
+        }
+    };
 
     public Long getId() {
         return id;
@@ -54,5 +81,24 @@ public class RecipeStep {
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(id);
+        }
+        parcel.writeString(shortDescription);
+        parcel.writeString(description);
+        parcel.writeString(videoURL);
+        parcel.writeString(thumbnailURL);
     }
 }

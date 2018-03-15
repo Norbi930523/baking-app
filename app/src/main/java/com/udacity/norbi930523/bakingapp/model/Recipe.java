@@ -1,12 +1,15 @@
 package com.udacity.norbi930523.bakingapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by Norbert Boros on 2018. 03. 12..
  */
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     private Long id;
 
@@ -19,6 +22,35 @@ public class Recipe {
     private List<RecipeIngredient> ingredients;
 
     private List<RecipeStep> steps;
+
+    protected Recipe(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        name = in.readString();
+        if (in.readByte() == 0) {
+            servings = null;
+        } else {
+            servings = in.readLong();
+        }
+        image = in.readString();
+        ingredients = in.createTypedArrayList(RecipeIngredient.CREATOR);
+        steps = in.createTypedArrayList(RecipeStep.CREATOR);
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public Long getId() {
         return id;
@@ -66,5 +98,30 @@ public class Recipe {
 
     public void setSteps(List<RecipeStep> steps) {
         this.steps = steps;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(id);
+        }
+        parcel.writeString(name);
+        if (servings == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(servings);
+        }
+        parcel.writeString(image);
+        parcel.writeTypedList(ingredients);
+        parcel.writeTypedList(steps);
     }
 }

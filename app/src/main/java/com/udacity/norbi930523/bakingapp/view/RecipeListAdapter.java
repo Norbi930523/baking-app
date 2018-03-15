@@ -1,6 +1,7 @@
 package com.udacity.norbi930523.bakingapp.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.norbi930523.bakingapp.R;
+import com.udacity.norbi930523.bakingapp.activity.RecipeDetailsActivity;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Norbert on 2018. 03. 12..
+ * Created by Norbert Boros on 2018. 03. 12..
  */
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
@@ -70,7 +72,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         return data.size();
     }
 
-    class RecipeViewHolder extends RecyclerView.ViewHolder{
+    class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.recipeImage)
         ImageView image;
@@ -82,6 +84,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Recipe recipe = data.get(getAdapterPosition());
+
+            Intent recipeDetailsIntent = new Intent(context, RecipeDetailsActivity.class);
+            recipeDetailsIntent.putExtra(RecipeDetailsActivity.RECIPE_PARAM_KEY, recipe);
+
+            context.startActivity(recipeDetailsIntent);
         }
     }
 }
