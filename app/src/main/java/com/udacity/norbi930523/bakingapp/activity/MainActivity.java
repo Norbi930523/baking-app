@@ -6,6 +6,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.adapter.RecipeListAdapter;
@@ -23,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @BindView(R.id.recipeListRecyclerView)
     RecyclerView recipeListRecyclerView;
+
+    @BindView(R.id.loadingIndicator)
+    ProgressBar loadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
+        loadingIndicator.setVisibility(View.GONE);
+
         if(recipeListRecyclerView.getAdapter() == null){
             recipeListRecyclerView.setAdapter(new RecipeListAdapter(this, data));
         }

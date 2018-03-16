@@ -8,12 +8,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Step description -->
         <TextView
             android:id="@+id/recipeStepDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_medium" />
+            style="@style/StepDescription" />
 
+        <!-- Navigation -->
         <include layout="@layout/recipe_step_navigation" />
     </LinearLayout>
 
