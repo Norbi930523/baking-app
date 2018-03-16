@@ -2,6 +2,7 @@ package com.udacity.norbi930523.bakingapp.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -55,14 +56,37 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepF
     /* Based on https://developer.android.com/training/system-ui/status.html and
      * https://developer.android.com/training/system-ui/navigation.html#40 */
     private void goFullScreen() {
-        View decorView = getWindow().getDecorView();
+        final View decorView = getWindow().getDecorView();
+
         // Hide both the navigation bar and the status bar.
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
         // a general rule, you should design your app to hide the status bar whenever you
         // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        final int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
         decorView.setSystemUiVisibility(uiOptions);
+
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                /* If the System UI becomes visible, hide it again after 2 seconds */
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            decorView.setSystemUiVisibility(uiOptions);
+                        }
+                    };
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(runnable, 2000);
+                }
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
