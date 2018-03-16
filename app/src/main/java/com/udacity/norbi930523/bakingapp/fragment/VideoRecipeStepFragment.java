@@ -35,6 +35,8 @@ import butterknife.ButterKnife;
 
 public class VideoRecipeStepFragment extends RecipeStepFragment {
 
+    private static final String VIDEO_POSITION_KEY = "videoPosition";
+
     @Nullable
     @BindView(R.id.recipeStepDescription)
     TextView stepDescription;
@@ -42,7 +44,9 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
     @BindView(R.id.exoPlayerView)
     PlayerView exoPlayerView;
 
-    SimpleExoPlayer exoPlayer;
+    private SimpleExoPlayer exoPlayer;
+
+    private long currentVideoPosition;
 
     public VideoRecipeStepFragment() {
         // Required empty public constructor
@@ -52,6 +56,24 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
         VideoRecipeStepFragment videoRecipeStepFragment = new VideoRecipeStepFragment();
 
         return RecipeStepFragment.newInstance(videoRecipeStepFragment, recipe, stepIndex);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        currentVideoPosition = 0L;
+
+        if(savedInstanceState != null){
+            currentVideoPosition = savedInstanceState.getLong(VIDEO_POSITION_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putLong(VIDEO_POSITION_KEY, exoPlayer.getCurrentPosition());
     }
 
     @Override
@@ -95,6 +117,12 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
 
             // Prepare the player with the source.
             exoPlayer.prepare(videoSource);
+
+            if(currentVideoPosition > 0){
+                /* After rotation, restore the video position and continue playing */
+                exoPlayer.seekTo(currentVideoPosition);
+                exoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
