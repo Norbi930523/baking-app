@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Ingredients title -->
+        <!-- Video player -->
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_medium"
+            app:resize_mode="fixed_width"
+            android:keepScreenOn="true"/>
+
+        <!-- Step description -->
         <TextView
+            android:id="@+id/recipeStepDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ingredients"
-            style="@style/Title"/>
-
-        <!-- Ingredients list -->
-        <LinearLayout
-            android:id="@+id/ingredientsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-        <!-- Navigation -->
-        <include layout="@layout/recipe_step_navigation" />
+            style="@style/StepDescription" />
 
     </LinearLayout>
 

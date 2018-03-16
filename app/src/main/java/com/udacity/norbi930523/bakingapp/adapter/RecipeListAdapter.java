@@ -93,7 +93,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             Recipe recipe = data.get(getAdapterPosition());
 
             Intent recipeDetailsIntent = new Intent(context, RecipeDetailsActivity.class);
-            recipeDetailsIntent.putExtra(RecipeDetailsActivity.RECIPE_PARAM_KEY, recipe);
+            recipeDetailsIntent.putExtra(RecipeDetailsActivity.RECIPE_PARAM, recipe);
 
             context.startActivity(recipeDetailsIntent);
         }

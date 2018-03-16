@@ -25,10 +25,14 @@ import java.util.List;
  */
 public class RecipeStepListFragment extends Fragment {
 
+    private static final String SELECTED_STEP_INDEX_KEY = "selectedStepIndex";
+
     private static final String RECIPE_STEPS_PARAM = "recipeSteps";
 
     private List<RecipeStep> recipeSteps;
     private OnRecipeStepClickListener clickListener;
+
+    private int selectedStepIndex;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,6 +59,26 @@ public class RecipeStepListFragment extends Fragment {
         if (getArguments() != null) {
             recipeSteps = getArguments().getParcelableArrayList(RECIPE_STEPS_PARAM);
         }
+
+        selectedStepIndex = 0;
+
+        if(savedInstanceState != null){
+            selectedStepIndex = savedInstanceState.getInt(SELECTED_STEP_INDEX_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(SELECTED_STEP_INDEX_KEY, getSelectedStepIndexFromAdapter());
+    }
+
+    private int getSelectedStepIndexFromAdapter(){
+        RecyclerView recyclerView = (RecyclerView) getView();
+        RecipeStepListAdapter adapter = (RecipeStepListAdapter) recyclerView.getAdapter();
+
+        return adapter.getSelectedStepIndex();
     }
 
     @Override
@@ -67,12 +91,11 @@ public class RecipeStepListFragment extends Fragment {
 
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new RecipeStepListAdapter(recipeSteps, clickListener));
+            recyclerView.setAdapter(new RecipeStepListAdapter(recipeSteps, selectedStepIndex, clickListener));
         }
 
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {

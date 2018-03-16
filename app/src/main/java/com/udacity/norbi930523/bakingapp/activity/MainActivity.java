@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -36,11 +37,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ButterKnife.bind(this);
 
-        recipeListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recipeListRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns()));
 
         /* Load recipes */
         getSupportLoaderManager().initLoader(RECIPE_LOADER_ID, null, this);
 
+    }
+
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int cardWidth = 300;
+        float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        return (int) (screenWidth / cardWidth);
     }
 
     @Override

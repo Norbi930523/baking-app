@@ -11,6 +11,7 @@ import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.fragment.RecipeStepListFragment;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
+import com.udacity.norbi930523.bakingapp.util.RecipeStepFragmentController;
 
 /**
  * Created by Norbert Boros on 2018. 03. 15..
@@ -18,7 +19,9 @@ import com.udacity.norbi930523.bakingapp.model.RecipeStep;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements RecipeStepListFragment.OnRecipeStepClickListener {
 
-    public static final String RECIPE_PARAM_KEY = "recipe";
+    public static final String RECIPE_PARAM = "recipe";
+
+    private boolean twoPaneLayout;
 
     private Recipe recipe;
 
@@ -34,7 +37,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            recipe = extras.getParcelable(RECIPE_PARAM_KEY);
+            recipe = extras.getParcelable(RECIPE_PARAM);
         }
 
         if(recipe == null){
@@ -43,10 +46,18 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
             return;
         }
 
-        if(savedInstanceState == null){
-            setTitle(recipe.getName());
+        /* If the selected step is shown in this layout, we are in two-pane layout */
+        twoPaneLayout = findViewById(R.id.recipeStepContainer) != null;
 
+        setTitle(recipe.getName());
+
+        if(savedInstanceState == null){
             loadRecipeSteps();
+
+            if(twoPaneLayout){
+                /* In two-pane layout, select the first step immediately to avoid blank fragment */
+                onRecipeStepClick(0);
+            }
         }
 
     }
@@ -75,10 +86,26 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
 
     @Override
     public void onRecipeStepClick(int stepIndex) {
-        Intent recipeStepIntent = new Intent(this, RecipeStepActivity.class);
-        recipeStepIntent.putExtra(RecipeStepActivity.RECIPE_PARAM, recipe);
-        recipeStepIntent.putExtra(RecipeStepActivity.SELECTED_STEP_INDEX_PARAM, stepIndex);
+        if(twoPaneLayout){
+            swapRecipeStepFragment(stepIndex);
+        } else {
+            Intent recipeStepIntent = new Intent(this, RecipeStepActivity.class);
+            recipeStepIntent.putExtra(RecipeStepActivity.RECIPE_PARAM, recipe);
+            recipeStepIntent.putExtra(RecipeStepActivity.SELECTED_STEP_INDEX_PARAM, stepIndex);
 
-        startActivity(recipeStepIntent);
+            startActivity(recipeStepIntent);
+        }
     }
+
+    private void swapRecipeStepFragment(int stepIndex) {
+        RecipeStepFragmentController.in(this)
+                .loadStepOf(recipe)
+                .at(stepIndex)
+                .into(R.id.recipeStepContainer);
+    }
+
+    public boolean isTwoPaneLayout(){
+        return twoPaneLayout;
+    }
+
 }

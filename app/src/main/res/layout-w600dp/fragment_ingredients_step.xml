@@ -22,9 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
 
-        <!-- Navigation -->
-        <include layout="@layout/recipe_step_navigation" />
-
     </LinearLayout>
 
 </ScrollView>

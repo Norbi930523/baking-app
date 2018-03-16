@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.norbi930523.bakingapp.R;
+import com.udacity.norbi930523.bakingapp.activity.RecipeDetailsActivity;
 import com.udacity.norbi930523.bakingapp.fragment.RecipeStepListFragment.OnRecipeStepClickListener;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
 
@@ -24,8 +25,11 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     private final List<RecipeStep> data;
     private final OnRecipeStepClickListener clickListener;
 
-    public RecipeStepListAdapter(List<RecipeStep> data, OnRecipeStepClickListener listener) {
+    private int selectedStepIndex;
+
+    public RecipeStepListAdapter(List<RecipeStep> data, int selectedStepIndex, OnRecipeStepClickListener listener) {
         this.data = data;
+        this.selectedStepIndex = selectedStepIndex;
         clickListener = listener;
     }
 
@@ -42,12 +46,18 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     public void onBindViewHolder(final RecipeStepViewHolder holder, int position) {
         RecipeStep recipeStep = data.get(position);
 
+        holder.itemView.setSelected(position == selectedStepIndex);
+
         holder.recipeStepName.setText(recipeStep.getShortDescription());
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public int getSelectedStepIndex() {
+        return selectedStepIndex;
     }
 
     public class RecipeStepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -66,7 +76,33 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         @Override
         public void onClick(View view) {
             if(clickListener != null){
-                clickListener.onRecipeStepClick(getAdapterPosition());
+                boolean twoPaneLayout = false;
+
+                if(clickListener instanceof RecipeDetailsActivity){
+                    twoPaneLayout = ((RecipeDetailsActivity) clickListener).isTwoPaneLayout();
+                }
+
+                if(twoPaneLayout){
+                    /* If the selected step changes... */
+                    if(selectedStepIndex != getAdapterPosition()){
+                        /* Update the UI */
+                        clickListener.onRecipeStepClick(getAdapterPosition());
+
+                        /* Update the previously selected step list item */
+                        notifyItemChanged(selectedStepIndex);
+
+                        /* Update the current step list item */
+                        notifyItemChanged(getAdapterPosition());
+
+                        /* Update the selected step index */
+                        selectedStepIndex = getAdapterPosition();
+                    }
+                } else {
+                    /* Update the UI */
+                    clickListener.onRecipeStepClick(getAdapterPosition());
+                }
+
+
             }
         }
     }

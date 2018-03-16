@@ -38,8 +38,6 @@ public abstract class RecipeStepFragment extends Fragment {
 
         if(context instanceof OnRecipeStepNavigationClickListener){
             navigationListener = (OnRecipeStepNavigationClickListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnRecipeStepNavigationClickListener");
         }
     }
 
@@ -58,7 +56,7 @@ public abstract class RecipeStepFragment extends Fragment {
 
         if(previousButton != null){
             if(stepIndex == 0){
-            /* There is no previous step, hide the button */
+                /* There is no previous step, hide the button */
                 previousButton.setVisibility(View.GONE);
             } else {
                 previousButton.setOnClickListener(new View.OnClickListener(){
@@ -77,7 +75,7 @@ public abstract class RecipeStepFragment extends Fragment {
 
         if(nextButton != null){
             if(stepIndex == recipe.getSteps().size() - 1){
-            /* There is no next step, hide the button */
+                /* There is no next step, hide the button */
                 nextButton.setVisibility(View.GONE);
             } else {
                 nextButton.setOnClickListener(new View.OnClickListener(){
