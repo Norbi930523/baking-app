@@ -114,9 +114,10 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
 
+        /* Pause the video if the app is put into the background or a call comes in */
         exoPlayer.setPlayWhenReady(false);
     }
 
