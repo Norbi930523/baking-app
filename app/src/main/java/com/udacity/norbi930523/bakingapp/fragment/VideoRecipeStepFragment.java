@@ -3,11 +3,10 @@ package com.udacity.norbi930523.bakingapp.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -36,8 +35,7 @@ import butterknife.ButterKnife;
 
 public class VideoRecipeStepFragment extends RecipeStepFragment {
 
-    private static final Double HEIGHT_TO_WIDTH_RATIO = 9.0 / 16.0;
-
+    @Nullable
     @BindView(R.id.recipeStepDescription)
     TextView stepDescription;
 
@@ -64,7 +62,10 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
         ButterKnife.bind(this, root);
 
         RecipeStep recipeStep = recipe.getSteps().get(stepIndex);
-        stepDescription.setText(recipeStep.getDescription());
+
+        if(stepDescription != null){
+            stepDescription.setText(recipeStep.getDescription());
+        }
 
         bindNavigation(root);
 
@@ -84,9 +85,6 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
             exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
             exoPlayerView.setPlayer(exoPlayer);
 
-            /* Fit ExoPlayer height to match the 16:9 ratio */
-            fitExoPlayerHeight();
-
             /* Based on https://google.github.io/ExoPlayer/guide.html#preparing-the-player */
             // Produces DataSource instances through which media data is loaded.
             String userAgent = Util.getUserAgent(getContext(), BuildConfig.APPLICATION_ID);
@@ -100,18 +98,6 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
         }
     }
 
-    /* Based on https://stackoverflow.com/a/19633520 */
-    private void fitExoPlayerHeight(){
-        exoPlayerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                exoPlayerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                exoPlayerView.getLayoutParams().height = (int) (exoPlayerView.getMeasuredWidth() * HEIGHT_TO_WIDTH_RATIO);
-            }
-        });
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -121,4 +107,5 @@ public class VideoRecipeStepFragment extends RecipeStepFragment {
         exoPlayer.release();
         exoPlayer = null;
     }
+
 }

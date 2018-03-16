@@ -56,34 +56,40 @@ public abstract class RecipeStepFragment extends Fragment {
         /* Previous step button */
         Button previousButton = view.findViewById(R.id.previousStepButton);
 
-        if(stepIndex == 0){
+        if(previousButton != null){
+            if(stepIndex == 0){
             /* There is no previous step, hide the button */
-            previousButton.setVisibility(View.GONE);
-        } else {
-            previousButton.setOnClickListener(new View.OnClickListener(){
+                previousButton.setVisibility(View.GONE);
+            } else {
+                previousButton.setOnClickListener(new View.OnClickListener(){
 
-                @Override
-                public void onClick(View view) {
-                    navigationListener.onPreviousButtonClick();
-                }
-            });
+                    @Override
+                    public void onClick(View view) {
+                        navigationListener.onPreviousButtonClick();
+                    }
+                });
+            }
         }
+
 
         /* Next step button */
         Button nextButton = view.findViewById(R.id.nextStepButton);
 
-        if(stepIndex == recipe.getSteps().size() - 1){
+        if(nextButton != null){
+            if(stepIndex == recipe.getSteps().size() - 1){
             /* There is no next step, hide the button */
-            nextButton.setVisibility(View.GONE);
-        } else {
-            nextButton.setOnClickListener(new View.OnClickListener(){
+                nextButton.setVisibility(View.GONE);
+            } else {
+                nextButton.setOnClickListener(new View.OnClickListener(){
 
-                @Override
-                public void onClick(View view) {
-                    navigationListener.onNextButtonClick();
-                }
-            });
+                    @Override
+                    public void onClick(View view) {
+                        navigationListener.onNextButtonClick();
+                    }
+                });
+            }
         }
+
 
     }
 

@@ -1,8 +1,11 @@
 package com.udacity.norbi930523.bakingapp.activity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.fragment.IngredientsStepFragment;
@@ -31,6 +34,11 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(isLandscape()){
+            goFullScreen();
+        }
+
         setContentView(R.layout.activity_recipe_step);
 
         stepIndex = 0;
@@ -46,6 +54,26 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepF
         } else {
             setTitle(savedInstanceState.getString(TITLE_KEY));
         }
+
+    }
+
+    /* Based on https://developer.android.com/training/system-ui/status.html and
+     * https://developer.android.com/training/system-ui/navigation.html#40 */
+    private void goFullScreen() {
+        View decorView = getWindow().getDecorView();
+        // Hide both the navigation bar and the status bar.
+        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+        // a general rule, you should design your app to hide the status bar whenever you
+        // hide the navigation bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.hide();
+        }
+
     }
 
     @Override
@@ -108,5 +136,9 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepF
     public void onNextButtonClick() {
         stepIndex++;
         updateUI();
+    }
+
+    private boolean isLandscape(){
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }
