@@ -53,30 +53,34 @@ public class IngredientsStepFragment extends RecipeStepFragment {
     }
 
     private void bindPinnedRecipeToggle(){
-        Long pinnedRecipeId = SharedPreferencesUtil.getPinnedRecipeId(getContext());
-
-        updatePinToggle(recipe.getId().equals(pinnedRecipeId));
+        updatePinToggle(isRecipePinned());
 
         pinnedRecipeToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long pinnedRecipeId = SharedPreferencesUtil.getPinnedRecipeId(getContext());
-
-                boolean isPinned = recipe.getId().equals(pinnedRecipeId);
+                boolean isPinned = isRecipePinned();
                 if(isPinned){
                     /* This is the currently pinned recipe, unpin */
                     SharedPreferencesUtil.unpinRecipe(getContext());
+                    isPinned = false;
                 } else {
                     /* An other recipe is pinned, pin this one */
-                    SharedPreferencesUtil.pinRecipe(getContext(), recipe.getId());
+                    SharedPreferencesUtil.pinRecipe(getContext(), recipe);
+                    isPinned = true;
                 }
 
-                updatePinToggle(!isPinned);
+                updatePinToggle(isPinned);
 
                 IngredientsWidgetUpdateService.startActionUpdate(getContext());
             }
         });
 
+    }
+
+    private boolean isRecipePinned(){
+        Recipe pinnedRecipe = SharedPreferencesUtil.getPinnedRecipe(getContext());
+
+        return pinnedRecipe != null && pinnedRecipe.getId().equals(recipe.getId());
     }
 
     private void updatePinToggle(boolean isPinned){

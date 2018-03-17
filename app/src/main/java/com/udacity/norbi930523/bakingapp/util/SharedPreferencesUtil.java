@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.udacity.norbi930523.bakingapp.model.Recipe;
+
 /**
  * Created by Norbert Boros on 2018. 03. 17..
  */
@@ -14,11 +16,11 @@ public class SharedPreferencesUtil {
 
     private SharedPreferencesUtil(){}
 
-    public static void pinRecipe(Context context, Long recipeId){
+    public static void pinRecipe(Context context, Recipe recipe){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         sharedPreferences.edit()
-                .putLong(PINNED_RECIPE_KEY, recipeId)
+                .putString(PINNED_RECIPE_KEY, RecipeJsonParserUtil.convertRecipeToJsonString(recipe))
                 .commit();
     }
 
@@ -30,10 +32,12 @@ public class SharedPreferencesUtil {
                 .commit();
     }
 
-    public static Long getPinnedRecipeId(Context context){
+    public static Recipe getPinnedRecipe(Context context){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        return sharedPreferences.getLong(PINNED_RECIPE_KEY, -1L);
+        String pinnedRecipeJson = sharedPreferences.getString(PINNED_RECIPE_KEY, null);
+
+        return pinnedRecipeJson == null ? null : RecipeJsonParserUtil.parseSingleRecipeJson(pinnedRecipeJson);
     }
 
 }

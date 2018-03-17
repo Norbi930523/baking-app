@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.udacity.norbi930523.bakingapp.R;
+import com.udacity.norbi930523.bakingapp.fragment.RecipeStepFragmentController;
 import com.udacity.norbi930523.bakingapp.fragment.RecipeStepListFragment;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
-import com.udacity.norbi930523.bakingapp.fragment.RecipeStepFragmentController;
 
 /**
  * Created by Norbert Boros on 2018. 03. 15..

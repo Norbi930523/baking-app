@@ -3,8 +3,8 @@ package com.udacity.norbi930523.bakingapp.widget;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

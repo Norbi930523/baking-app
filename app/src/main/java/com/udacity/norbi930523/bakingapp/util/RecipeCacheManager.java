@@ -2,16 +2,12 @@ package com.udacity.norbi930523.bakingapp.util;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +41,7 @@ public class RecipeCacheManager {
             String json = IOUtils.toString(fis, Charset.forName("UTF-8"));
             fis.close();
 
-            return RecipeJsonParserUtil.parseJson(json);
+            return RecipeJsonParserUtil.parseRecipeListJson(json);
         } catch (Exception e) {
             Timber.e(e, "An error occurred while reading recipes.");
         }

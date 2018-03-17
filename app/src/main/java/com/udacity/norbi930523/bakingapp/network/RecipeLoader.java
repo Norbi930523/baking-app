@@ -3,14 +3,11 @@ package com.udacity.norbi930523.bakingapp.network;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.udacity.norbi930523.bakingapp.BuildConfig;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.util.RecipeCacheManager;
 import com.udacity.norbi930523.bakingapp.util.RecipeJsonParserUtil;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +50,7 @@ public class RecipeLoader extends AsyncTaskLoader<List<Recipe>> {
 
             RecipeCacheManager.cacheRecipes(getContext(), json);
 
-            return RecipeJsonParserUtil.parseJson(json);
+            return RecipeJsonParserUtil.parseRecipeListJson(json);
         } catch(Exception e){
             Timber.e(e, "Error parsing recipes.");
         }

@@ -19,8 +19,16 @@ public class RecipeJsonParserUtil {
 
     private RecipeJsonParserUtil(){}
 
-    public static List<Recipe> parseJson(String json){
+    public static List<Recipe> parseRecipeListJson(String json){
         return GSON.fromJson(json, LIST_TYPE);
+    }
+
+    public static Recipe parseSingleRecipeJson(String json){
+        return GSON.fromJson(json, Recipe.class);
+    }
+
+    public static String convertRecipeToJsonString(Recipe recipe){
+        return GSON.toJson(recipe);
     }
 
 }

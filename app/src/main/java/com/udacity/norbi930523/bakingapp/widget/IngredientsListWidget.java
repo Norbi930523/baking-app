@@ -9,7 +9,6 @@ import android.widget.RemoteViews;
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeIngredient;
-import com.udacity.norbi930523.bakingapp.util.RecipeCacheManager;
 import com.udacity.norbi930523.bakingapp.util.SharedPreferencesUtil;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 public class IngredientsListWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        Recipe pinnedRecipe = getPinnedRecipe(context);
+        Recipe pinnedRecipe = SharedPreferencesUtil.getPinnedRecipe(context);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_list_widget);
@@ -71,19 +70,6 @@ public class IngredientsListWidget extends AppWidgetProvider {
         }
 
         return ingredientsListBuilder.toString();
-    }
-
-    private static Recipe getPinnedRecipe(Context context){
-        List<Recipe> recipes = RecipeCacheManager.readRecipesFromCache(context);
-        Long pinnedRecipeId = SharedPreferencesUtil.getPinnedRecipeId(context);
-
-        for(Recipe recipe : recipes){
-            if(recipe.getId().equals(pinnedRecipeId)){
-                return recipe;
-            }
-        }
-
-        return null;
     }
 }
 
