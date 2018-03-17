@@ -11,7 +11,7 @@ import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.fragment.RecipeStepFragment;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
-import com.udacity.norbi930523.bakingapp.util.RecipeStepFragmentController;
+import com.udacity.norbi930523.bakingapp.fragment.RecipeStepFragmentController;
 
 public class RecipeStepActivity extends AppCompatActivity implements RecipeStepFragment.OnRecipeStepNavigationClickListener {
 

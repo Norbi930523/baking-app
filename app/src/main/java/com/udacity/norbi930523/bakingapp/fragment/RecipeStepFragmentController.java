@@ -1,12 +1,8 @@
-package com.udacity.norbi930523.bakingapp.util;
+package com.udacity.norbi930523.bakingapp.fragment;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.udacity.norbi930523.bakingapp.fragment.IngredientsStepFragment;
-import com.udacity.norbi930523.bakingapp.fragment.RecipeStepFragment;
-import com.udacity.norbi930523.bakingapp.fragment.SimpleRecipeStepFragment;
-import com.udacity.norbi930523.bakingapp.fragment.VideoRecipeStepFragment;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
 

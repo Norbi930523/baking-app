@@ -1,6 +1,8 @@
 package com.udacity.norbi930523.bakingapp.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.adapter.RecipeListAdapter;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.network.RecipeLoader;
+import com.udacity.norbi930523.bakingapp.util.SharedPreferencesUtil;
 
 import java.util.List;
 

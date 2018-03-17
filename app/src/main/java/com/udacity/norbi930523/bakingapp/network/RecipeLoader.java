@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.udacity.norbi930523.bakingapp.BuildConfig;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
+import com.udacity.norbi930523.bakingapp.util.RecipeCacheManager;
+import com.udacity.norbi930523.bakingapp.util.RecipeJsonParserUtil;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -23,17 +25,12 @@ import timber.log.Timber;
 
 public class RecipeLoader extends AsyncTaskLoader<List<Recipe>> {
 
-    private static final Type LIST_TYPE = new TypeToken<List<Recipe>>(){}.getType();
-
     private final OkHttpClient httpClient;
-
-    private final Gson gson;
 
     public RecipeLoader(Context context) {
         super(context);
 
         httpClient = new OkHttpClient();
-        gson = new Gson();
     }
 
     @Override
@@ -54,7 +51,9 @@ public class RecipeLoader extends AsyncTaskLoader<List<Recipe>> {
 
             String json = response.body().string();
 
-            return gson.fromJson(json, LIST_TYPE);
+            RecipeCacheManager.cacheRecipes(getContext(), json);
+
+            return RecipeJsonParserUtil.parseJson(json);
         } catch(Exception e){
             Timber.e(e, "Error parsing recipes.");
         }
