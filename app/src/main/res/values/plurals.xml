@@ -1,43 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="ingredient_measure_cup">
-        <item quantity="zero">cup</item>
         <item quantity="one">cup</item>
         <item quantity="other">cups</item>
     </plurals>
 
     <plurals name="ingredient_measure_tblsp">
-        <item quantity="zero">tablespoon</item>
         <item quantity="one">tablespoon</item>
         <item quantity="other">tablespoons</item>
     </plurals>
 
     <plurals name="ingredient_measure_tsp">
-        <item quantity="zero">teaspoon</item>
         <item quantity="one">teaspoon</item>
         <item quantity="other">teaspoons</item>
     </plurals>
 
     <plurals name="ingredient_measure_g">
-        <item quantity="zero">gramm</item>
         <item quantity="one">gramm</item>
         <item quantity="other">gramms</item>
     </plurals>
 
     <plurals name="ingredient_measure_k">
-        <item quantity="zero">kilo</item>
         <item quantity="one">kilo</item>
         <item quantity="other">kilos</item>
     </plurals>
 
     <plurals name="ingredient_measure_oz">
-        <item quantity="zero">ounce</item>
         <item quantity="one">ounce</item>
         <item quantity="other">ounces</item>
     </plurals>
 
     <plurals name="ingredient_measure_unit">
-        <item quantity="zero">piece</item>
         <item quantity="one">piece</item>
         <item quantity="other">pieces</item>
     </plurals>

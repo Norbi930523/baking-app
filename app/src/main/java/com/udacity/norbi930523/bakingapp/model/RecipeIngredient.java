@@ -90,10 +90,22 @@ public class RecipeIngredient implements Parcelable {
 
         int measureResId = getMeasureResourceId();
         if(measureResId != -1){
-            measureStr = context.getResources().getQuantityString(measureResId, quantity.intValue());
+            measureStr = context.getResources().getQuantityString(measureResId, getQuantityPlural());
         }
 
         return context.getString(R.string.ingredient_item_pattern, getFormattedQuantity(), measureStr, ingredient);
+    }
+
+    /* Converts a double quantity to an int, based on which the correct plural string can be chosen.
+     * E.g. 0.5 is plural, 1.0 is singular, 1.01 is plural.  */
+    private int getQuantityPlural(){
+        double quantityDiff = quantity - 1.0;
+
+        if(quantityDiff >= 0 && quantityDiff < 0.01){
+            return 1;
+        }
+
+        return 2;
     }
 
     private String getFormattedQuantity(){
