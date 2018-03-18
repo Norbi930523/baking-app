@@ -8,6 +8,8 @@
     <string name="ingredient_item_pattern">&#8226; %1$s %2$s of %3$s</string>
     <string name="content_description_pin">Pin</string>
     <string name="content_description_unpin">Unpin</string>
+    <string name="message_recipe_pinned">Recipe pinned to Home screen widget</string>
+    <string name="message_recipe_unpinned">Recipe unpinned from Home screen widget</string>
 
     <!-- Recipe step navigation -->
     <string name="previous">Previous</string>

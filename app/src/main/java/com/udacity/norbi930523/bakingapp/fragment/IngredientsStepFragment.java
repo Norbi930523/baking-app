@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
@@ -64,7 +65,7 @@ public class IngredientsStepFragment extends RecipeStepFragment {
                     SharedPreferencesUtil.unpinRecipe(getContext());
                     isPinned = false;
                 } else {
-                    /* An other recipe is pinned, pin this one */
+                    /* An other recipe is pinned, pin this one instead */
                     SharedPreferencesUtil.pinRecipe(getContext(), recipe);
                     isPinned = true;
                 }
@@ -72,6 +73,12 @@ public class IngredientsStepFragment extends RecipeStepFragment {
                 updatePinToggle(isPinned);
 
                 IngredientsWidgetUpdateService.startActionUpdate(getContext());
+
+                Toast.makeText(
+                        getContext(),
+                        isPinned ? R.string.message_recipe_pinned : R.string.message_recipe_unpinned,
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
 
