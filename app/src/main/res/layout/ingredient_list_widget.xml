@@ -11,10 +11,9 @@
         android:layout_height="wrap_content"
         style="@style/WidgetTitle" />
 
-    <TextView
+    <ListView
         android:id="@+id/pinnedRecipeIngredients"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/WidgetIngredientsList" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

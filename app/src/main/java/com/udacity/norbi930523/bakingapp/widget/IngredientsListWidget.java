@@ -3,15 +3,13 @@ package com.udacity.norbi930523.bakingapp.widget;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
-import com.udacity.norbi930523.bakingapp.model.RecipeIngredient;
 import com.udacity.norbi930523.bakingapp.util.SharedPreferencesUtil;
-
-import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -25,8 +23,10 @@ public class IngredientsListWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_list_widget);
 
         if(pinnedRecipe != null){
+            Intent remoteViewsService = IngredientsWidgetRemoteViewsService.getIntent(context, pinnedRecipe.getIngredients());
+            views.setRemoteAdapter(R.id.pinnedRecipeIngredients, remoteViewsService);
+
             views.setTextViewText(R.id.pinnedRecipeName, pinnedRecipe.getName());
-            views.setTextViewText(R.id.pinnedRecipeIngredients, getIngredientsBulletList(context, pinnedRecipe.getIngredients()));
             views.setViewVisibility(R.id.pinnedRecipeIngredients, View.VISIBLE);
         } else {
             views.setTextViewText(R.id.pinnedRecipeName, context.getString(R.string.widget_no_recipe_pinned));
@@ -62,14 +62,5 @@ public class IngredientsListWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    private static String getIngredientsBulletList(Context context, List<RecipeIngredient> ingredients){
-        StringBuilder ingredientsListBuilder = new StringBuilder();
-
-        for(RecipeIngredient ingredient : ingredients){
-            ingredientsListBuilder.append(ingredient.getAsFormattedString(context)).append("\n");
-        }
-
-        return ingredientsListBuilder.toString();
-    }
 }
 
