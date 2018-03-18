@@ -2,7 +2,6 @@ package com.udacity.norbi930523.bakingapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.activity.RecipeDetailsActivity;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
+import com.udacity.norbi930523.bakingapp.util.NetworkUtil;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,7 +42,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        CardView recipeCard = (CardView) layoutInflater.inflate(R.layout.recipe_card, parent, false);
+        View recipeCard = layoutInflater.inflate(R.layout.recipe_card, parent, false);
 
         return new RecipeViewHolder(recipeCard);
     }
@@ -53,16 +53,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         holder.name.setText(recipe.getName());
 
-        if(StringUtils.isEmpty(recipe.getImage())){
-            Picasso.with(context)
-                    .load(R.drawable.recipe_default)
-                    .placeholder(R.drawable.recipe_default)
-                    .into(holder.image);
-        } else {
+        if(StringUtils.isNotEmpty(recipe.getImage()) && NetworkUtil.isOnline(context)){
             Picasso.with(context)
                     .load(recipe.getImage())
                     .placeholder(R.drawable.recipe_default)
                     .error(R.drawable.recipe_default)
+                    .into(holder.image);
+        } else {
+            Picasso.with(context)
+                    .load(R.drawable.recipe_default)
+                    .placeholder(R.drawable.recipe_default)
                     .into(holder.image);
         }
     }
@@ -80,7 +80,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         @BindView(R.id.recipeName)
         TextView name;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);

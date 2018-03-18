@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.adapter.RecipeListAdapter;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.network.RecipeLoader;
+import com.udacity.norbi930523.bakingapp.util.NetworkUtil;
+import com.udacity.norbi930523.bakingapp.util.RecipeCacheManager;
 
 import java.util.List;
 
@@ -23,6 +26,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Recipe>> {
 
     private static final int RECIPE_LOADER_ID = 100;
+
+    @BindView(R.id.emptyCacheMessage)
+    TextView emptyCacheMessage;
 
     @BindView(R.id.recipeListRecyclerView)
     RecyclerView recipeListRecyclerView;
@@ -39,8 +45,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns()));
 
-        /* Load recipes */
-        getSupportLoaderManager().initLoader(RECIPE_LOADER_ID, null, this);
+        if(NetworkUtil.isOnline(this)){
+            /* The user is online, load recipes from the net */
+            getSupportLoaderManager().initLoader(RECIPE_LOADER_ID, null, this);
+        } else {
+            loadRecipesFromCache();
+        }
 
     }
 
@@ -52,6 +62,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         float screenWidth = displayMetrics.widthPixels / displayMetrics.density;
 
         return (int) (screenWidth / cardWidth);
+    }
+
+    private void loadRecipesFromCache(){
+        List<Recipe> recipes = RecipeCacheManager.readRecipesFromCache(this);
+
+        if(!recipes.isEmpty()){
+            onLoadFinished(null, recipes);
+        } else {
+            loadingIndicator.setVisibility(View.GONE);
+            recipeListRecyclerView.setVisibility(View.GONE);
+            emptyCacheMessage.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

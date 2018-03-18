@@ -2,6 +2,8 @@
     <string name="app_name">Baking App</string>
 
     <string name="error_recipe_required">Recipe not found!</string>
+    <string name="empty_cache">The recipes cannot be loaded, because you are offline and the cache is empty. Please connect to the internet and restart the application.</string>
+    <string name="offline_no_video">Could not load video resource, because you are offline. If you want to view the video, please connect to the internet and restart the application.</string>
 
     <!-- Ingredients -->
     <string name="ingredients">Ingredients</string>

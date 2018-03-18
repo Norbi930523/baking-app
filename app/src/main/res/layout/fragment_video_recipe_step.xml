@@ -17,6 +17,17 @@
             app:resize_mode="fixed_width"
             android:keepScreenOn="true"/>
 
+        <!-- Shown when the user is offline and therefore
+             it is not possible to download the video -->
+        <TextView
+            android:id="@+id/offlineNoVideoMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/offline_no_video"
+            android:padding="@dimen/spacing_medium"
+            android:textColor="@android:color/black"
+            android:visibility="gone"/>
+
         <!-- Step description -->
         <TextView
             android:id="@+id/recipeStepDescription"

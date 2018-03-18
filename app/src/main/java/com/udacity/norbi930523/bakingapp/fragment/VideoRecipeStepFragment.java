@@ -35,6 +35,7 @@ import com.udacity.norbi930523.bakingapp.BuildConfig;
 import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.model.RecipeStep;
+import com.udacity.norbi930523.bakingapp.util.NetworkUtil;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,6 +53,9 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
 
     @BindView(R.id.exoPlayerView)
     PlayerView exoPlayerView;
+
+    @BindView(R.id.offlineNoVideoMessage)
+    TextView offlineNoVideoMessage;
 
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder playbackStateBuilder;
@@ -88,7 +92,11 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         super.onSaveInstanceState(outState);
 
         outState.putInt(VIDEO_PLAYBACK_STATE_KEY, getMediaSessionPlaybackState());
-        outState.putLong(VIDEO_POSITION_KEY, exoPlayer.getCurrentPosition());
+
+        if(exoPlayer != null){
+            outState.putLong(VIDEO_POSITION_KEY, exoPlayer.getCurrentPosition());
+        }
+
     }
 
     @Override
@@ -107,8 +115,13 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         bindNavigation(root);
 
         /* ExoPlayer setup */
-        String videoUri = StringUtils.defaultString(recipeStep.getVideoURL(), recipeStep.getThumbnailURL());
-        initializeExoPlayer(Uri.parse(videoUri));
+        if(NetworkUtil.isOnline(getContext())){
+            String videoUri = StringUtils.defaultString(recipeStep.getVideoURL(), recipeStep.getThumbnailURL());
+            initializeExoPlayer(Uri.parse(videoUri));
+        } else {
+            exoPlayerView.setVisibility(View.GONE);
+            offlineNoVideoMessage.setVisibility(View.VISIBLE);
+        }
 
         return root;
     }
@@ -118,7 +131,10 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         super.onStop();
 
         /* Pause the video if the app is put into the background or a call comes in */
-        exoPlayer.setPlayWhenReady(false);
+        if(exoPlayer != null){
+            exoPlayer.setPlayWhenReady(false);
+        }
+
     }
 
     @Override
@@ -126,9 +142,12 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         super.onDestroy();
 
         /* Release ExoPlayer */
-        exoPlayer.stop();
-        exoPlayer.release();
-        exoPlayer = null;
+        if(exoPlayer != null){
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+
     }
 
     private int getMediaSessionPlaybackState(){
