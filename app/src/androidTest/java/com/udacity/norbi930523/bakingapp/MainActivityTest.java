@@ -1,7 +1,7 @@
 package com.udacity.norbi930523.bakingapp;
 
-import android.app.Instrumentation;
-import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -11,6 +11,7 @@ import com.udacity.norbi930523.bakingapp.activity.RecipeDetailsActivity;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,9 +37,18 @@ public class MainActivityTest {
 
     @Rule public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    private IdlingResource idlingResource;
+
     @BeforeClass
     public static void setup(){
         Intents.init();
+    }
+
+    @Before
+    public void registerIdlingResource(){
+        idlingResource = activityTestRule.getActivity().getIdlingResource();
+
+        IdlingRegistry.getInstance().register(idlingResource);
     }
 
     @Test
@@ -46,12 +56,17 @@ public class MainActivityTest {
         onView(withId(R.id.recipeListRecyclerView))
             .perform(actionOnItemAtPosition(0, click()));
 
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-
         intended(allOf(
                 hasComponent(RecipeDetailsActivity.class.getName()),
                 hasExtra(equalTo(RecipeDetailsActivity.RECIPE_PARAM), instanceOf(Recipe.class))
         ));
+    }
+
+    public void unregisterIdlingResource(){
+        if(idlingResource != null){
+            IdlingRegistry.getInstance().unregister(idlingResource);
+            idlingResource = null;
+        }
     }
 
     @AfterClass

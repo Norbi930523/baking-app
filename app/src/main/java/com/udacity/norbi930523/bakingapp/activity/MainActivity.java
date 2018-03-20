@@ -1,6 +1,9 @@
 package com.udacity.norbi930523.bakingapp.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import com.udacity.norbi930523.bakingapp.R;
 import com.udacity.norbi930523.bakingapp.adapter.RecipeListAdapter;
 import com.udacity.norbi930523.bakingapp.model.Recipe;
 import com.udacity.norbi930523.bakingapp.network.RecipeLoader;
+import com.udacity.norbi930523.bakingapp.testutil.SimpleIdlingResource;
 import com.udacity.norbi930523.bakingapp.util.NetworkUtil;
 import com.udacity.norbi930523.bakingapp.util.RecipeCacheManager;
 
@@ -26,6 +30,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Recipe>> {
 
     private static final int RECIPE_LOADER_ID = 100;
+
+    private SimpleIdlingResource simpleIdlingResource;
 
     @BindView(R.id.emptyCacheMessage)
     TextView emptyCacheMessage;
@@ -48,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if(NetworkUtil.isOnline(this)){
             /* The user is online, load recipes from the net */
             getSupportLoaderManager().initLoader(RECIPE_LOADER_ID, null, this);
+
+            if(simpleIdlingResource != null){
+                simpleIdlingResource.setIdleState(false);
+            }
         } else {
             loadRecipesFromCache();
         }
@@ -88,10 +98,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if(recipeListRecyclerView.getAdapter() == null){
             recipeListRecyclerView.setAdapter(new RecipeListAdapter(this, data));
         }
+
+        if(simpleIdlingResource != null){
+            simpleIdlingResource.setIdleState(true);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
 
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (simpleIdlingResource == null) {
+            simpleIdlingResource = new SimpleIdlingResource();
+        }
+        return simpleIdlingResource;
     }
 }
