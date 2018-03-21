@@ -62,6 +62,9 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
 
     private SimpleExoPlayer exoPlayer;
 
+    private int playbackState;
+    private long currentVideoPosition;
+
     public VideoRecipeStepFragment() {
         // Required empty public constructor
     }
@@ -76,26 +79,41 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int playbackState = PlaybackStateCompat.STATE_PAUSED;
-        long currentVideoPosition = 0L;
+        playbackState = PlaybackStateCompat.STATE_PAUSED;
+        currentVideoPosition = 0L;
 
         if(savedInstanceState != null){
             playbackState = savedInstanceState.getInt(VIDEO_PLAYBACK_STATE_KEY);
             currentVideoPosition = savedInstanceState.getLong(VIDEO_POSITION_KEY);
         }
 
-        initializeMediaSession(playbackState, currentVideoPosition);
+        initializeMediaSession();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (Util.SDK_INT > 23) {
+            initializeExoPlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if ((Util.SDK_INT <= 23 || exoPlayer == null)) {
+            initializeExoPlayer();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt(VIDEO_PLAYBACK_STATE_KEY, getMediaSessionPlaybackState());
-
-        if(exoPlayer != null){
-            outState.putLong(VIDEO_POSITION_KEY, exoPlayer.getCurrentPosition());
-        }
+        outState.putInt(VIDEO_PLAYBACK_STATE_KEY, playbackState);
+        outState.putLong(VIDEO_POSITION_KEY, currentVideoPosition);
 
     }
 
@@ -114,11 +132,7 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
 
         bindNavigation(root);
 
-        /* ExoPlayer setup */
-        if(NetworkUtil.isOnline(getContext())){
-            String videoUri = StringUtils.defaultString(recipeStep.getVideoURL(), recipeStep.getThumbnailURL());
-            initializeExoPlayer(Uri.parse(videoUri));
-        } else {
+        if(!NetworkUtil.isOnline(getContext())){
             exoPlayerView.setVisibility(View.GONE);
             offlineNoVideoMessage.setVisibility(View.VISIBLE);
         }
@@ -127,27 +141,33 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        playbackState = getMediaSessionPlaybackState();
+        currentVideoPosition = exoPlayer != null ? exoPlayer.getCurrentPosition() : 0L;
+
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
-        /* Pause the video if the app is put into the background or a call comes in */
-        if(exoPlayer != null){
-            exoPlayer.setPlayWhenReady(false);
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
         }
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        /* Release ExoPlayer */
+    private void releasePlayer(){
         if(exoPlayer != null){
             exoPlayer.stop();
             exoPlayer.release();
             exoPlayer = null;
         }
-
     }
 
     private int getMediaSessionPlaybackState(){
@@ -158,7 +178,16 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         return mediaSession.getController().getPlaybackState().getPosition();
     }
 
-    private void initializeExoPlayer(Uri videoUri) {
+    private void initializeExoPlayer() {
+        if(!NetworkUtil.isOnline(getContext())){
+            return; // The user is offline, do not initialize ExoPlayer
+        }
+
+        RecipeStep recipeStep = recipe.getSteps().get(stepIndex);
+        String videoUriStr = StringUtils.defaultString(recipeStep.getVideoURL(), recipeStep.getThumbnailURL());
+
+        Uri videoUri = Uri.parse(videoUriStr);
+
         if(exoPlayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -189,7 +218,7 @@ public class VideoRecipeStepFragment extends RecipeStepFragment implements Playe
         }
     }
 
-    private void initializeMediaSession(int playbackState, long currentVideoPosition) {
+    private void initializeMediaSession() {
 
         // Create a MediaSessionCompat.
         mediaSession = new MediaSessionCompat(getContext(), this.getClass().getName());
